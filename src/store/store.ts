@@ -1,4 +1,5 @@
 import type {
+  AircraftPositionRecord,
   AuditRecord,
   CertificateRecord,
   CoreReturn,
@@ -36,6 +37,8 @@ export class Store {
   readonly customs = new Map<string, CustomsDeclaration>();
   readonly coreReturns = new Map<string, CoreReturn>();
   readonly installedParts = new Map<string, InstalledPart>();
+  readonly aircraftPositions = new Map<string, AircraftPositionRecord>();
+  readonly aircraftPositionHistory: AircraftPositionRecord[] = [];
   readonly outbox: OutboxMessage[] = [];
   readonly audit: AuditRecord[] = [];
   readonly ledger: LedgerEntry[] = [];
@@ -63,5 +66,4 @@ export class Store {
   addLedger(entry: Omit<LedgerEntry, 'id' | 'createdAt'>): void {
     this.ledger.push({ ...entry, id: this.nextId('ledger'), createdAt: this.now() });
   }
-  readonly aircraftPositions = new Map<string, import('../domain/types.js').AircraftPositionRecord>();
 }
