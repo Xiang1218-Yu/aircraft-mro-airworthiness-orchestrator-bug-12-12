@@ -1,4 +1,5 @@
 import type {
+  AircraftPositionRecord,
   AuditRecord,
   CertificateRecord,
   CoreReturn,
@@ -40,6 +41,11 @@ export class Store {
   readonly audit: AuditRecord[] = [];
   readonly ledger: LedgerEntry[] = [];
   readonly externalEvents = new Map<string, ExternalEvent>();
+  // Active occupant per `aircraftId:position`; a position has at most one entry here.
+  readonly aircraftPositions = new Map<string, AircraftPositionRecord>();
+  // Full install/remove history; entries are the same objects held by `aircraftPositions`
+  // while active, so `removedAt` stays consistent with the live configuration.
+  readonly aircraftPositionHistory: AircraftPositionRecord[] = [];
   readonly lock = new Mutex();
   private sequence = 0;
 
@@ -63,5 +69,4 @@ export class Store {
   addLedger(entry: Omit<LedgerEntry, 'id' | 'createdAt'>): void {
     this.ledger.push({ ...entry, id: this.nextId('ledger'), createdAt: this.now() });
   }
-  readonly aircraftPositions = new Map<string, import('../domain/types.js').AircraftPositionRecord>();
 }
